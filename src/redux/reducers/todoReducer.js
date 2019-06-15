@@ -1,4 +1,4 @@
-import { UPDATE_VALUE, SAVE_TODO } from '../actions/actionTypes';
+import { UPDATE_VALUE, SAVE_TODO, DELETE_TODO, TOGGLE_COMPLETED } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
     value: '',
@@ -13,12 +13,26 @@ export default (state = INITIAL_STATE, action) => {
                 value: action.payload
             }
         case SAVE_TODO: 
+            return state.value ? {
+                ...state,
+                value: '',
+                todos: [...state.todos, {value: state.value, completed: false}],
+            } : state
+        case DELETE_TODO:
+                return { 
+                    ...state,
+                    todos : state.todos.filter((_,i) => i !== action.payload)
+                }
+        case TOGGLE_COMPLETED:
+            var todos = state.todos;
+            todos[action.payload].completed = !todos[action.payload].completed; 
+            console.log('todos[action.payload].completed', todos[action.payload].completed);
+            
             return {
                 ...state,
-                todos: [...state.todos, {value: state.value, completed: false}],
+                todos: todos
             }
         default:
             return state;
     }
-    // return state;
 };
